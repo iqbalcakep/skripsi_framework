@@ -9,6 +9,9 @@ import operator
 from sklearn.feature_extraction.text import TfidfVectorizer
 import pandas as pd
 import string
+from sklearn.metrics import jaccard_similarity_score
+
+metode = sys.argv[1]
 
 mydb = mysql.connector.connect(
       host="localhost",
@@ -48,8 +51,9 @@ for i in range(0,total) :
         if i == j :
             continue
         else :
-            
-            
+            tfidf = TfidfVectorizer(use_idf=True, lowercase=True, preprocessor=None, tokenizer=None, stop_words=None)
+            texts = [a[i]['term'].replace(',', ' '),a[j]['term'].replace(',', ' ')]
+            feature = tfidf.fit_transform(texts)
             tfidfs.add(str(a[i]['id'])+'-'+str(a[j]['id']),tfidf)
             # print pd.DataFrame(feature.toarray(),columns=tfidf.get_feature_names())
             features.add(str(a[i]['id'])+'-'+str(a[j]['id']),feature)
@@ -75,11 +79,19 @@ def count_dice(query,doc):
     
 def count_jaccard(query,doc):
     materials = features[str(query['id'])+'-'+str(doc['id'])]
-    s1 = len(query['term'].split(','))
-    s2 = len(doc['term'].split(','))
-    intersect = list(set(query['term'].split(','))&set(doc['term'].split(',')))
-    jaccard_in = len(intersect)  / (s1 + s2);
-    return jaccard_in
+    list1 = query['term'].split(',')
+    list2 = doc['term'].split(',')
+    
+    # intersect = list(set(query['term'].split(','))&set(doc['term'].split(',')))
+    # jaccard_in = len(intersect)  / (s1 + s2);
+    s1 = set(list1)
+    s2 = set(list2)
+    return len(s1.intersection(s2)) / len(s1.union(s2))
+    
+    # return jaccard_similarity_score()
+    # return jaccard_in
+
+    
     
 
 similarity = AllSimilarity()
@@ -89,9 +101,12 @@ for i in range(0,total):
         if i == j :
             continue
         else :
-           dice = count_dice(a[i],a[j])
+           if(metode=='similarity'):
+              dice = count_dice(a[i],a[j])
+           else :
+              dice = count_jaccard(a[i],a[j])  
         #    if(dice > 0.0001) : ?? should i set the rule?? OMG im confused
-           cursor.execute("select * from similarity where article_id = '"+str(a[i]['id'])+"' ")
+           cursor.execute("select * from "+metode+" where article_id = '"+str(a[i]['id'])+"' ")
            counted = cursor.fetchone()
            if(counted):
                counted_similarity = counted['similarity'].split(',')
@@ -106,25 +121,28 @@ for i in range(0,total):
     for i in similarity :
         similarity_id = []
         similarity_val = []
+        similarity_percent = []
         for elem in sorted(similarity[i].items(), reverse=True, key=lambda x: x[1]) :
             similarity_id.append(str(elem[0]))  
             similarity_val.append(str(elem[1]))
-            if(len(similarity_id) == len(similarity_val) == 5):
+            percent = float(elem[1])*100
+            similarity_percent.append(str(percent))
+            if(len(similarity_id) == len(similarity_val) == len(similarity_percent) == 5):
                 break
         recom_id = ','.join(similarity_id)
         recom_val = ','.join(similarity_val)
+        recom_percent = ','.join(similarity_percent)
         # print recom_val
         # print recom_id
         # print i
         # # print "======="
-        insert_query = "insert into similarity set article_id = '"+str(i)+"', recomendation_id = '"+recom_id+"', similarity='"+recom_val+"'"
-        update_query = "update similarity set recomendation_id = '"+recom_id+"', similarity='"+recom_val+"' where article_id = '"+str(i)+"'"
+        insert_query = "insert into "+metode+" set article_id = '"+str(i)+"', recomendation_id = '"+recom_id+"', similarity='"+recom_val+"', percent ='"+recom_percent+"'"
+        update_query = "update "+metode+" set recomendation_id = '"+recom_id+"', similarity='"+recom_val+"', percent ='"+recom_percent+"' where article_id = '"+str(i)+"'"
         try :
             cursor.execute(insert_query)
             mydb.commit()
-            print i 
+            print i
             print recom_val
-            print "<br/>"
         except :
             cursor.execute(update_query)
             mydb.commit()

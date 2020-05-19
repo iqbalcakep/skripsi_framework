@@ -17,6 +17,7 @@ Route::group(["prefix"=>"admin","namespace"=>"Admin","name"=>"admin."], function
     Route::get('/', 'Dashboard@index')->name('dashboard');
     Route::get('operation', 'Operation@index')->name('operation');
     Route::get('preprocessing', 'Preprocessing@index')->name('preprocessing');
+    Route::get('similarity', 'Similarity@index')->name('similarity');
 });
 
 

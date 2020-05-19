@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Article as ArticleModel;
 use App\Transformers\ArticleTransformer;
+use App\Transformers\SimilarityTransformer;
 use App\Transformers\PreprocessingTransformer;
 use Illuminate\Database\Eloquent\Collection;
 use Artisan;
@@ -41,6 +42,12 @@ class Article extends Controller
     {
         Artisan::call('start:crawl --path=python/dice.py');
         return response(json_encode(Artisan::output()));
+    }
+    
+    public function similarity()
+    {
+        $aritcles = ArticleModel::with(['dice','jaccard'])->paginate();
+        return response(fractal($aritcles, new SimilarityTransformer)->toArray());
     }
     
 }  

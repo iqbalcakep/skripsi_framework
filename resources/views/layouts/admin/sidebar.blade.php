@@ -27,6 +27,9 @@
                     <li class="nav-item {{ Request::url()== url('/admin/preprocessing') ? 'active' : '' }} "> 
                         <a href="{{config('app.url')}}admin/preprocessing" class="nav-link"><span class="pcoded-micon"><i class="feather icon-settings"></i></span><span class="pcoded-mtext">Preprocessing</span></a>
                     </li>
+                    <li class="nav-item {{ Request::url()== url('/admin/similarity') ? 'active' : '' }} "> 
+                        <a href="{{config('app.url')}}admin/similarity" class="nav-link"><span class="pcoded-micon"><i class="feather icon-book"></i></span><span class="pcoded-mtext">Similarity</span></a>
+                    </li>
                 </ul>
             </div>
         </div>

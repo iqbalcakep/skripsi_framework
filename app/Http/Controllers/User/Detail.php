@@ -20,6 +20,8 @@ class Detail extends Controller
         $title = str_replace('-',' ',$slug);
         $article = Article::where('title',$title)->first();
         
+        // dd($article);
+        
         if($article)
             $similarity = Similarity::where('article_id', $article->id)->first();
             $ids = explode(',',$similarity->recomendation_id);

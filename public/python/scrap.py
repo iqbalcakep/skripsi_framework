@@ -70,7 +70,7 @@ def timeConvert(date) :
     
     
 # CRAWLING 
-print "start crawl <br/>"
+print "start crawl"
 
 url = "https://brilio.net"
 
@@ -87,8 +87,8 @@ for article in articles :
     else :
         url = 'https://brilio.net' + el
     links.append(url)
-    if(len(links) > int(sys.argv[1]) ):
-        break
+    # if(len(links) > 50 ):
+    #     break
 
 cursor = mydb.cursor()
 for link in links:
@@ -99,7 +99,7 @@ for link in links:
 cursor.close ()
 # sys.exit()
 
-print "finish crawl <br/>"
+print "finish crawl"
 
 
 titles = []
@@ -138,7 +138,7 @@ for link in links :
      
     
          contents.append(text_temp)
-         print "crawled "+ str(urut) + "<br/>"
+         print "crawled "+ str(urut)
         #  time.sleep(1)
          urut+= 1
     except urllib2.URLError as e:
@@ -147,7 +147,7 @@ for link in links :
     	#  time.sleep(1)
          continue
 
-print "finish crawl detail <br/><br/>"
+print "finish crawl detail"
         
 # Preprocessing Process
 fix_contents = []
@@ -183,9 +183,9 @@ if len(titles) == len(dates) == len(thumbnails) == len(terms) == len(fix_content
             cursor.execute("insert into article set thumbnail = '"+thumbnails[i]+"', title = '"+titles[i]+"', real_content = '"+contents[i]+"', content = '"+fix_contents[i]+"'," \
                          "date='"+dates[i]+"', url = '"+urls[i]+"', term = '"+','.join(terms[i])+"',filter = '"+''.join(all_filters[i])+"',tokenize = '"+', '.join(all_tokens[i])+"', title_term = '"+', '.join(title_term[i])+"' ")
             mydb.commit()
-            print "insert success <br/>"
+            print "insert success"
         except: 
-            print "insert error  <br/>"
+            print "insert error"
             continue
     cursor.close()
         

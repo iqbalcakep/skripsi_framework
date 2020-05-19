@@ -19,7 +19,6 @@ Route::group(['prefix'=>'admin'], function() {
     Route::post('preprocessing', 'Article@preprocessing');
     Route::post('crawl', 'Article@crawl');
     Route::post('dice', 'Article@dice');
-    
-    
+    Route::post('similarity', 'Article@similarity');    
     
 });
