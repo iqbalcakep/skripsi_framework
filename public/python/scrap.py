@@ -15,9 +15,10 @@ import datetime
 
 mydb = mysql.connector.connect(
       host="localhost",
+      port="3307",
       user="root",
       passwd="",
-      database="skripsi"
+      database="skripsi_fix"
 )
 
 
