@@ -47,12 +47,10 @@ $(window).on('load',function(){
     }
 </script>
 
-//
 <script src="{{config('app.url')}}assets/js/demo.js"></script>
 <script src="{{config('app.url')}}assets/js/notify.js"></script>
 <script src="{{config('app.url')}}assets/plugins/ekko-lightbox/js/ekko-lightbox.min.js"></script>
 <script src="{{config('app.url')}}assets/plugins/lightbox2-master/js/lightbox.min.js"></script>
-<script src="{{config('app.url')}}assets/plugins/select2/js/select2.full.min.js"></script>
 <script src="{{config('app.url')}}js/jquery.twbsPagination.js"></script>
 <script src="{{config('app.url')}}assets/plugins/sweetalert/js/sweetalert.min.js"></script>
 <!-- Page script -->
@@ -72,7 +70,6 @@ function createCookie(name,value,days) {
 const base_url = '{{config('app.url')}}'
   $(function () {
     //Initialize Select2 Elements
-    $(".js-select").select2();
 
     set_ajax=(url,params,loading_div,callback,form)=>{
         $.ajaxSetup({

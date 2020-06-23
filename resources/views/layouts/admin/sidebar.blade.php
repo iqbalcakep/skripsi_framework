@@ -30,6 +30,9 @@
                     <li class="nav-item {{ Request::url()== url('/admin/similarity') ? 'active' : '' }} "> 
                         <a href="{{config('app.url')}}admin/similarity" class="nav-link"><span class="pcoded-micon"><i class="feather icon-book"></i></span><span class="pcoded-mtext">Similarity</span></a>
                     </li>
+                    <li class="nav-item {{ Request::url()== url('/admin/history') ? 'active' : '' }} "> 
+                        <a href="{{config('app.url')}}admin/history" class="nav-link"><span class="pcoded-micon"><i class="feather icon-user"></i></span><span class="pcoded-mtext">Hisotry</span></a>
+                    </li>
                 </ul>
             </div>
         </div>

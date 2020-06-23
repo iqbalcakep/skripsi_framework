@@ -1,11 +1,11 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Transformers;
 
+use App\Article as ArticleModel;
 use League\Fractal\TransformerAbstract;
-use App\Article;
 
-class SimilarityTransformer extends TransformerAbstract
+class HistoryTransformer extends TransformerAbstract
 {
     /**
      * List of resources to automatically include
@@ -13,31 +13,27 @@ class SimilarityTransformer extends TransformerAbstract
      * @var array
      */
     protected $defaultIncludes = [
-        //
     ];
-    
+
     /**
      * List of resources possible to include
      *
      * @var array
      */
     protected $availableIncludes = [
-        //
     ];
-    
+
     /**
      * A Fractal transformer.
      *
      * @return array
      */
-    public function transform(Article $article)
+    public function transform(ArticleModel $article)
     {
         return [
             'id' => $article->id,
             'title' => $article->title,
-            'dice' => $article->dice,
-            'jaccard' => $article->jaccard,
-            'all' => $article->all,
+            'engage' => $article->engage,
         ];
     }
 }

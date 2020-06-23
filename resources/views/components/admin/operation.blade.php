@@ -57,6 +57,8 @@
         <div class="card-block table-responsive">
             <button type="button"  id="startCrawl" data-placement="left" data-toggle="tooltip"  class="btn text-white btn-primary btn-loader mr-1"><i class="feather icon-settings"></i> Start Crawl</button>
             <button type="button" id="startDice" data-placement="left" data-toggle="tooltip"  class="btn text-white btn-primary btn-loader mr-1"><i class="feather icon-settings"></i> Start Dice</button>
+            <button type="button" id="startJaccard" data-placement="left" data-toggle="tooltip"  class="btn text-white btn-primary btn-loader mr-1"><i class="feather icon-settings"></i> Start Jaccard</button>
+            
             <div id = "background">
                 <div id = "console">
                     <p id = "consoletext">

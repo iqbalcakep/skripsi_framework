@@ -13,7 +13,7 @@ class Crawl extends Command
      *
      * @var string
      */
-    protected $signature = 'start:crawl {--path=} {--total=}';
+    protected $signature = 'start:crawl {--command=}';
 
     /**
      * The console command description.
@@ -40,15 +40,7 @@ class Crawl extends Command
     public function handle()
     {
         //
-        $output = shell_exec('python '.$this->option('path').' '.$this->option('total'));
-        // dump($output);
-        // $process = Process::fromShellCommandline('python '.$this->option('path'));
-        // $process->run(null, []);
-        
-        // if (!$process->isSuccessful()) {
-        //     throw new ProcessFailedException($process);
-        // }
-        
+        $output = shell_exec($this->option('command'));        
         $this->info($output);
     }
 }

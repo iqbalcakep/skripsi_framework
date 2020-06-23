@@ -23,3 +23,15 @@ $("#startDice").on('click', function(e) {
         $("#consoletext").html(response)
     })
 })
+
+$("#startJaccard").on('click', function(e) {
+    $("#consoletext").html('LOADING....')
+    console.log('jalan');
+    url = base_url_prefix + "jaccard"
+
+    var params = {}
+    set_ajax(url, params, "null", function(response) {
+
+        $("#consoletext").html(response)
+    })
+})

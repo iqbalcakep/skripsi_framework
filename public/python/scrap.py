@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-import urllib2
+import urllib.request
 import nltk
 from nltk.corpus import stopwords
 from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory, StopWordRemover, ArrayDictionary
@@ -11,16 +11,15 @@ import sys
 import time
 import datetime
 
-
+limit_crawl = sys.argv[1]
 
 mydb = mysql.connector.connect(
       host="localhost",
-      port="3307",
+      port="3306",
       user="root",
       passwd="",
       database="skripsi_fix"
 )
-
 
 # ## PREPROCESSING ##
 #filtering
@@ -71,11 +70,13 @@ def timeConvert(date) :
     
     
 # CRAWLING 
-print "start crawl"
+print("start crawl")
+start_time_crawl = time.time()
+
 
 url = "https://brilio.net"
 
-content = urllib2.urlopen(url).read()
+content = urllib.request.urlopen(url).read()
 soup = BeautifulSoup(content, 'html.parser')
 
 articles = soup.find_all('p',class_='text-article')
@@ -88,8 +89,8 @@ for article in articles :
     else :
         url = 'https://brilio.net' + el
     links.append(url)
-    # if(len(links) > 50 ):
-    #     break
+    if(len(links) > int(limit_crawl) ):
+        break
 
 cursor = mydb.cursor()
 for link in links:
@@ -100,8 +101,7 @@ for link in links:
 cursor.close ()
 # sys.exit()
 
-print "finish crawl"
-
+print("finish crawl")
 
 titles = []
 contents = []
@@ -110,12 +110,13 @@ dates=[]
 thumbnails=[]
 urls = []
 
-print len(links)
-urut = 0;
+print(len(links))
+urut = 0
 for link in links :
     try:
-        if (link[0:10] != "https://s."):
-         content = urllib2.urlopen(link).read()
+        if (link[0:10] != "https://s." and link[0:19] != "https://brilicious." and link[0:19] != "https://brilistyle."):
+         print(link)
+         content = urllib.request.urlopen(link).read()
          soup = BeautifulSoup(content, 'html.parser')
          konten = soup.find('div', class_='main-content').find_all('p')
          # GET DETAIL
@@ -126,7 +127,6 @@ for link in links :
          except :
             time_convert = datetime.datetime.today().strftime('%Y-%m-%d')
          dates.append(time_convert)
-         
          temp_img = soup.find('figure', class_='headline-index').find('img')
          thumbnails.append(temp_img.attrs['src'])
          urls.append(link)
@@ -139,17 +139,20 @@ for link in links :
      
     
          contents.append(text_temp)
-         print "crawled "+ str(urut)
+         print("crawled "+ str(urut))
         #  time.sleep(1)
          urut+= 1
-    except urllib2.URLError as e:
+    except urllib.request.URLError as e:
          links.remove(link)
-         print "gagal crawl"
+         print("gagal crawl")
     	#  time.sleep(1)
          continue
 
-print "finish crawl detail"
-        
+print("finish crawl detail")
+print("--- %s seconds ---" % (time.time() - start_time_crawl))
+
+print("Start Preprocessing")        
+start_time_preproses = time.time()
 # Preprocessing Process
 fix_contents = []
 fix_titles = []
@@ -164,6 +167,7 @@ for i in range(0, len(contents)):
     all_tokens.append(hasil_tokens)
     fix_titles.append(hasil_title)
     fix_contents.append(hasil)
+    print("processed article "+ str(i))
 
 #TF IDF PROCESS
 terms = []
@@ -173,20 +177,23 @@ for fix_content in fix_contents :
     
 for fix_title in fix_titles :
     weight = Weighting(fix_title)
-    title_term.append(weight.term_common)    
+    title_term.append(weight.term_common)   
+
+print("Finish Preprocessing") 
+print("--- %s seconds ---" % (time.time() - start_time_preproses))
 
 
 if len(titles) == len(dates) == len(thumbnails) == len(terms) == len(fix_contents) == len(urls) :
-    print "all same"
+    print("all same")
     cursor = mydb.cursor()
     for i in range(0, len(urls)) :
         try :
             cursor.execute("insert into article set thumbnail = '"+thumbnails[i]+"', title = '"+titles[i]+"', real_content = '"+contents[i]+"', content = '"+fix_contents[i]+"'," \
                          "date='"+dates[i]+"', url = '"+urls[i]+"', term = '"+','.join(terms[i])+"',filter = '"+''.join(all_filters[i])+"',tokenize = '"+', '.join(all_tokens[i])+"', title_term = '"+', '.join(title_term[i])+"' ")
             mydb.commit()
-            print "insert success"
+            print("insert success")
         except: 
-            print "insert error"
+            print("insert error")
             continue
     cursor.close()
         

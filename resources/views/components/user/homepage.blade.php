@@ -47,7 +47,7 @@
             @isset($three)
                 @foreach ($three as $val)
                     <div class="pr-5 pr-sm-0 pt-5 float-left float-sm-none pos-relative w-1-3 w-sm-100 h-100 h-sm-300x">
-                        <a class="pos-relative h-100 dplay-block" href="{{$val['title']}}">
+                        <a class="pos-relative h-100 dplay-block" href="{{$val['slug']}}">
                         
                             <div class="img-bg bg-4 bg-grad-layer-6" style=" background-image: url('{{$val['thumbnail']}}');"></div>
                             
@@ -86,7 +86,7 @@
                     <div class="col-sm-6">
                       @isset($four)
                         @foreach ($four as $val)
-                            <a class="oflow-hidden pos-relative mb-20 dplay-block" href="{{$val['title']}}">
+                            <a class="oflow-hidden pos-relative mb-20 dplay-block" href="{{$val['slug']}}">
                                 <div class="wh-100x abs-tlr"><img src="{{$val['thumbnail']}}" alt=""></div>
                                 <div class="ml-120 min-h-100x">
                                     <h5><b>{{$val['title']}}</b></h5>

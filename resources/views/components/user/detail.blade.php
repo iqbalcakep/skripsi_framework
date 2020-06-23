@@ -18,6 +18,15 @@
 					<ul class="list-li-mr-20 mtb-15">
 						<li><i class="color-primary mr-5 font-12 ion-ios-bolt"></i>{{ $article->date }}</li>
 					</ul>
+
+					<div class="col-md-12">
+						<h4>Related Post</h4>
+						@foreach($recomendationsOther as $val)
+							<a onclick="engage(<?= $article->id ?>,'<?= $val['slug'] ?>')" class="oflow-hidden pos-relative mb-20 dplay-block" href="#">
+								{{$val->title}}
+							</a><!-- oflow-hidden -->
+						@endforeach
+					</div>
 					
 					<p>{{ $article->real_content }}</p>
 				
@@ -41,7 +50,7 @@
 						<div class="mtb-50">
 							<h4 class="p-title"><b>Related Post</b></h4>
 							@foreach($recomendations as $val )
-								<a class="oflow-hidden pos-relative mb-20 dplay-block" href="{{$val['title']}}">
+								<a onclick="engage(<?= $article->id ?>,'<?= $val['slug'] ?>')" class="oflow-hidden pos-relative mb-20 dplay-block" href="#">
 									<div class="wh-100x abs-tlr"><img src="{{ $val->thumbnail }}" alt=""></div>
 									<div class="ml-120 min-h-100x">
 										<h5><b>{{ $val->title }}</b></h5>
@@ -62,3 +71,17 @@
     
     
 @endsection
+
+@push('script')
+	<script>
+		var base_url_prefix = base_url + "api/admin/"
+		engage = (id,slug) => {
+			// console.log(slug)
+			
+			params = {id:id}
+			set_ajax(base_url_prefix+"engage",params,"null",function(res){
+				window.location = slug
+			})
+		}
+	</script>
+@endpush

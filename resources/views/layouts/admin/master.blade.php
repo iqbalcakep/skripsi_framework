@@ -27,18 +27,13 @@
     <link rel="stylesheet" href="{{config('app.url')}}assets/plugins/prism/css/prism.min.css">
     <!-- vendor css -->  
     <link id="realcss"  rel="stylesheet" href="{{config('app.url')}}assets/css/style.css">
-    <link href="{{config('app.url')}}assets/plugins/material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet">
     <link href="{{config('app.url')}}assets/fonts/material/css/materialdesignicons.min.css" rel="stylesheet">
-    {{-- <link href="{{config('app.url')}}assets/plugins/bootstrap-datetimepicker/css/prettify.css" rel="stylesheet">
-    <link href="{{config('app.url')}}assets/plugins/bootstrap-datetimepicker/css/docs.css" rel="stylesheet"> --}}
-    <link href="{{config('app.url')}}assets/plugins/bootstrap-datetimepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet">
-    <link href="{{config('app.url')}}assets/plugins/select2/css/select2.min.css" rel="stylesheet">
     <link href="{{config('app.url')}}assets/plugins/ekko-lightbox/css/ekko-lightbox.min.css" rel="stylesheet">
-     <link href="{{config('app.url')}}assets/plugins/lightbox2-master/css/lightbox.min.css" rel="stylesheet">
-     <link href="{{config('app.url')}}assets/css/jquery.timepicker.min.css" rel="stylesheet">
-     <link href="{{config('app.url')}}assets/plugins/ekko-lightbox/css/ekko-lightbox.min.css" rel="stylesheet">
+     <link href="{{config('app.url')}}assets/plugins/lightbox2-master/css/lightbox.min.css" rel="stylesheet">     <link href="{{config('app.url')}}assets/plugins/ekko-lightbox/css/ekko-lightbox.min.css" rel="stylesheet">
     <link href="{{config('app.url')}}assets/plugins/lightbox2-master/css/lightbox.min.css" rel="stylesheet">
-     
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.css" integrity="sha256-IvM9nJf/b5l2RoebiFno92E5ONttVyaEEsdemDC6iQA=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
     @if (request()->cookie('theme')=="dark")
     <link id="darkcss" rel="stylesheet" href="{{config('app.url')}}assets/css/layouts/dark.css">
     @endif

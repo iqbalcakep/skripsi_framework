@@ -19,6 +19,13 @@ Route::group(['prefix'=>'admin'], function() {
     Route::post('preprocessing', 'Article@preprocessing');
     Route::post('crawl', 'Article@crawl');
     Route::post('dice', 'Article@dice');
+    Route::post('jaccard', 'Article@jaccard');
     Route::post('similarity', 'Article@similarity');    
-    
+    Route::post('compare', 'Article@compare');
+    Route::post('lasthistory', 'Article@lasthistory');
+
+    Route::get('getRecomendation', 'Article@getRecomendation');
+
+    // insert
+    Route::post('engage', 'Article@engage');
 });

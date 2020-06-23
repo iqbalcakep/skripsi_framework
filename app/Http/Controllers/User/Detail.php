@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Article;
 use App\Similarity;
+use App\SimilarityOther;
 
 class Detail extends Controller
 {
@@ -17,17 +18,23 @@ class Detail extends Controller
      */
     public function __invoke(Request $request,string $slug)
     {
-        $title = str_replace('-',' ',$slug);
-        $article = Article::where('title',$title)->first();
+        // $title = str_replace('-',' ',$slug);
+        $article = Article::whereRaw("REPLACE(`title`,' ', '-') = ?", [$slug])->first();
+        $recomendations = [];
         
-        // dd($article);
-        
-        if($article)
+        if($article != null){
             $similarity = Similarity::where('article_id', $article->id)->first();
+            $similarityOther = SimilarityOther::where('article_id', $article->id)->first();
+
             $ids = explode(',',$similarity->recomendation_id);
-            $recomendations = Article::whereIn('id',$ids)->get();
+            $idsOther = explode(',',$similarityOther->recomendation_id);
             
+            $recomendations = Article::select('id','date','url','title','thumbnail')->whereIn('id',$ids)->get();
+            $recomendationsOther = Article::select('id','date','url','title','thumbnail')->whereIn('id',$idsOther)->get();
+
+        }
+
         // dd($recomendations);
-        return View('components/user/detail', compact('article','recomendations'));
+        return View('components/user/detail', compact('article','recomendations','recomendationsOther'));
     }
 }

@@ -47,8 +47,6 @@ apply_pagination = () => {
     });
 }
 
-
-
 set_object = () => {
     $no = 1;
     $element = ""
@@ -68,7 +66,6 @@ set_object = () => {
     $("#tableBody_jaccard").html($element_jaccard)
 
 }
-
 
 sorting = async(kolom, element) => {
     orderByCol = kolom;
@@ -119,10 +116,34 @@ $("#reloadpost").on('click', function(e) {
 
 })
 
+get_compare =() => {
+    urltxt = base_url_prefix + "compare"
+    var params = {total : $("#max").children("option:selected").val()}
+    set_ajax(urltxt, params, "null", function(response) {
+        $(".total_data").text(response.detail.total)
+        $(".total_sama").text(response.detail.same)
+        $(".total_berbeda").text(response.detail.not_same)
+        $(".max_recom").text(response.detail.max_recom)
+        $('#myChart').remove(); // this is my <canvas> element
+         $('#chart-container').append('<canvas id="myChart"><canvas>');
+        var ctx = $('#myChart');
+        var myDoughnutChart = new Chart(ctx, {
+            type: 'pie',
+            data: response.chart,
+        });
+        
+        console.log(response);
+    })
+}
+
+$("select#max").change(function(){
+    get_compare();
+})
 
 $(document).ready(function() {
     // console.log(fpid);
     apply_pagination()
+    get_compare()
         // $('#filter-date').bootstrapMaterialDatePicker({
         //     weekStart: 0,
         //     time: false,

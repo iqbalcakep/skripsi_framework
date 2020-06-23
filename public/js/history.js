@@ -11,42 +11,18 @@ var base_url_prefix = base_url + "api/admin/",
 count_post = (page = null) => {
     urltxt = base_url_prefix + "article"
     url = page != null ? urltxt + "?page=" + page : urltxt + "?page=1"
-    var params = { search: filterSearch }
+    var params = { action: 'history', limit : $("#max").children("option:selected").val() }
     set_ajax(url, params, "null", function(response) {
 
         records = response.data
         var pagination = response.meta.pagination
         var total = pagination.total_pages
         if (total != 0) {
-            localStorage.setItem('total_page', total)
             set_object();
-            if (!$('#pagination').data("twbs-pagination")) {
-                apply_pagination();
-            }
-        } else {
-            $("#tableBody").html("<tr><td colspan='6'><h4 class='text-danger text-center'>Data Not Found</h4></td></tr>");
-            if ($('#pagination').data("twbs-pagination")) {
-                $('.pagination').twbsPagination('destroy');
-            }
         }
 
     })
 }
-
-apply_pagination = () => {
-    if ($('#pagination').data("twbs-pagination")) {
-        $('.pagination').twbsPagination('destroy');
-    }
-    $('#pagination').twbsPagination({
-        totalPages: localStorage.getItem('total_page') ? localStorage.getItem('total_page') : 1,
-        visiblePages: 5,
-        onPageClick: function(event, page) {
-            count_post(page)
-        }
-    });
-}
-
-
 
 set_object = () => {
     $no = 1;
@@ -54,7 +30,7 @@ set_object = () => {
     records.map(d => {
         $element += '<tr>'
         $element += '<td>' + d.id + '</td><td style="max-width:40%;">' + d.title + '</td>' +
-            '<td><img src="' + d.thumbnail + '" height="150" weight="150"><td style="word-wrap: break-word;white-space:normal;max-width:25%;">' + d.content + '</td>'
+            '<td style="word-wrap: break-word;white-space:normal;max-width:25%;">' + d.engage + '</td>'
         $element += '</tr>'
     })
     $("#tableBody").html($element)
@@ -110,10 +86,50 @@ $("#reloadpost").on('click', function(e) {
 
 })
 
+get_chart =() => {
+    urltxt = base_url_prefix + "lasthistory"
+    var params = {limit : $("#max").children("option:selected").val()}
+    set_ajax(urltxt, params, "null", function(response) {
+        $('#myChart').remove(); // this is my <canvas> element
+         $('#chart-container').append('<canvas id="myChart"><canvas>');
+        var ctx = $('#myChart');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: response.labels,
+                datasets: [{
+                    label: 'Engagement Rank',
+                    data: response.values,
+                    backgroundColor: response.colors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+        
+        console.log(response);
+    })
+}
+
+$("select#max").change(function(){
+    count_post();
+    get_chart();
+})
 
 $(document).ready(function() {
     // console.log(fpid);
-    apply_pagination()
+    count_post();
+    get_chart();
         // $('#filter-date').bootstrapMaterialDatePicker({
         //     weekStart: 0,
         //     time: false,
